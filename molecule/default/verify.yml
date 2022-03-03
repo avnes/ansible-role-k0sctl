@@ -21,6 +21,10 @@
         path: "{{ k0sctl_runtime_dir }}/k0sctl"
       register: k0sctl_file
 
+    - name: Print stat info
+      debug:
+        msg: "{{ k0sctl_file.stat }}"
+
     - name: Assert that k0sctl exists
       assert:
         that: k0sctl_file.stat.exists
