@@ -1,0 +1,44 @@
+---
+- name: Set download directory if install only for the user
+  set_fact:
+    k0sctl_runtime_dir: "{{ ansible_user_dir }}/bin"
+  when: not k0sctl_for_all_users | bool
+
+- name: Set download directory for all users to use
+  set_fact:
+    k0sctl_runtime_dir: "/usr/local/bin"
+  when: k0sctl_for_all_users | bool
+
+- name: Create bin directory in users home if necessary for local install
+  ansible.builtin.file:
+    path: "{{ ansible_user_dir }}/bin"
+    state: directory
+    mode: 0755
+  when: not k0sctl_for_all_users | bool
+
+- name: Download file
+  get_url:
+    url: "https://github.com/k0sproject/k0sctl/releases/download/v{{ k0sctl_version }}/k0sctl-linux-x64"
+    dest: "/tmp/k0sctl"
+    mode: "0755"
+
+- name: Copy file to runtime directory
+  copy:
+    src: "/tmp/k0sctl"
+    dest: "{{ k0sctl_runtime_dir }}"
+    mode: 0755
+    remote_src: yes
+
+- name: Set autocompletion for bash
+  shell: "{{ k0sctl_runtime_dir }}/k0sctl completion > /etc/bash_completion.d/k0sctl"
+  args:
+    executable: /bin/bash
+  when: command_shell | lower == "bash"
+  changed_when: False
+
+- name: Set autocompletion for zsh
+  shell: "{{ k0sctl_runtime_dir }}/k0sctl completion > /usr/local/share/zsh/site-functions/_k0sctl"
+  args:
+    executable: /bin/zsh
+  when: command_shell | lower == "zsh"
+  changed_when: False

@@ -1,0 +1,34 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: true
+  vars:
+    k0sctl_for_all_users: true
+    command_shell: bash
+  tasks:
+    - name: Set download directory if install only for the user
+      set_fact:
+        k0sctl_runtime_dir: "{{ ansible_user_dir }}/bin"
+      when: not k0sctl_for_all_users | bool
+
+    - name: Set download directory for all users to use
+      set_fact:
+        k0sctl_runtime_dir: "/usr/local/bin"
+      when: k0sctl_for_all_users | bool
+
+    - name: Find the k0sctl file
+      ansible.builtin.stat:
+        path: "{{ k0sctl_runtime_dir }}/k0sctl"
+      register: k0sctl_file
+
+    - name: Assert that k0sctl exists
+      assert:
+        that: k0sctl_file.stat.exists
+
+    - name: Assert that k0sctl is binary
+      assert:
+        that: k0sctl_file.stat.charset == "binary"
+
+    - name: Assert that k0sctl is executable
+      assert:
+        that: k0sctl_file.stat.executable

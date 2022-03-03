@@ -1,0 +1,37 @@
+---
+galaxy_info:
+  role_name: k0sctl
+  author: avnes
+  description: Will install k0sctl
+  company:
+
+  license: license (MIT)
+
+  min_ansible_version: 2.11
+
+  platforms:
+    - name: Fedora
+      versions:
+        - 34
+        - 35
+    - name: Ubuntu
+      versions:
+        - bionic
+        - cosmic
+        - disco
+        - eoan
+        - focal
+        - groovy
+        - hirsute
+        - impish
+    - name: EL
+      versions:
+        - 8
+
+  galaxy_tags:
+    - kubernetes
+    - k8s
+    - cli
+    - k0sctl
+
+dependencies: []
