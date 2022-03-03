@@ -29,10 +29,6 @@
       assert:
         that: k0sctl_file.stat.exists
 
-    - name: Assert that k0sctl is binary
-      assert:
-        that: k0sctl_file.stat.charset == "binary"
-
     - name: Assert that k0sctl is executable
       assert:
         that: k0sctl_file.stat.executable
