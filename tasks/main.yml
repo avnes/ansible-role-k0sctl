@@ -36,9 +36,20 @@
   when: command_shell | lower == "bash"
   changed_when: False
 
-- name: Set autocompletion for zsh
+- name: Set autocompletion for zsh on Debian familiy distros
   shell: "{{ k0sctl_runtime_dir }}/k0sctl completion > /usr/local/share/zsh/site-functions/_k0sctl"
   args:
     executable: /bin/zsh
-  when: command_shell | lower == "zsh"
+  when:
+    - command_shell | lower == "zsh"
+    - ansible_facts['os_family'] == "Debian"
+  changed_when: False
+
+- name: Set autocompletion for zsh on RedHat familiy distros
+  shell: "{{ k0sctl_runtime_dir }}/k0sctl completion > /usr/share/zsh/site-functions/_k0sctl"
+  args:
+    executable: /bin/zsh
+  when:
+    - command_shell | lower == "zsh"
+    - ansible_facts['os_family'] == "RedHat"
   changed_when: False
