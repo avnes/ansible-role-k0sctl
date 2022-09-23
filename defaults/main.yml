@@ -1,5 +1,5 @@
 ---
-k0sctl_version: 0.13.2
+k0sctl_version: 0.14.0
 k0sctl_for_all_users: true
 
 command_shell: bash
